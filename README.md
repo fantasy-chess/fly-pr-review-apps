@@ -1,5 +1,7 @@
 # PR Review Apps on Fly.io
 
+(Fantasy Chess's version with some tweaks for us)
+
 This GitHub action wraps the Fly.io CLI to automatically deploy pull requests to [fly.io](http://fly.io) for review. These are useful for testing changes on a branch without having to setup explicit staging environments.
 
 This action will create, deploy, and destroy Fly apps. Just set an Action Secret for `FLY_API_TOKEN`.
