@@ -20,7 +20,6 @@ EVENT_TYPE=$(jq -r .action /github/workflow/event.json)
 app="${INPUT_NAME:-pr-$PR_NUMBER-$GITHUB_REPOSITORY_OWNER-$GITHUB_REPOSITORY_NAME}"
 # Change underscores to hyphens.
 app="${app//_/-}"
-region="${INPUT_REGION:-${FLY_REGION:-iad}}"
 org="${INPUT_ORG:-${FLY_ORG:-personal}}"
 image="$INPUT_IMAGE"
 config="${INPUT_CONFIG:-fly.toml}"
@@ -40,7 +39,7 @@ fi
 if ! flyctl status --app "$app"; then
   # Backup the original config file since 'flyctl launch' messes up the [build.args] section
   cp "$config" "$config.bak"
-  flyctl launch --no-deploy --copy-config --name "$app" --image "$image" --region "$region" --org "$org"
+  flyctl launch --no-deploy --copy-config --name "$app" --image "$image" --org "$org"
   # Restore the original config file
   cp "$config.bak" "$config"
 fi
@@ -55,7 +54,7 @@ fi
 
 # Trigger the deploy of the new version.
 echo "Contents of config $config file: " && cat "$config"
-flyctl deploy --config "$config" --app "$app" --regions "$region" --image "$image" --strategy immediate --ha=$INPUT_HA
+flyctl deploy --config "$config" --app "$app" --image "$image" --strategy immediate --ha=$INPUT_HA
 
 # Make some info available to the GitHub workflow.
 flyctl status --app "$app" --json >status.json
